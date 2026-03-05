@@ -4,16 +4,16 @@ export default function Hero() {
       <div className="container">
         <div className="elevate__inner">
           <div className="elevate__content elevate-content">
-            <h1 className="heading__title">Design Lab</h1>
+            <h1 className="heading__title">STXWORX</h1>
             <h2 className="elevate-content__title">
-              Social Network & Community <span>HTML Template</span> for Digital Designers and Freelancers
+              Decentralized Freelance Platform with <span>Milestone-Based Escrow</span> on Stacks Blockchain
             </h2>
-            <a className="elevate-content__link" href="/home.html" target="_blank">View Demos</a>
+            <button className="elevate-content__link" onClick={() => alert('Wallet integration coming soon!')} style={{border: 'none', cursor: 'pointer'}}>Connect Wallet</button>
           </div>
           <div className="elevate__view elevate-view">
             <div className="elevate-view__box">
               <p className="elevate-view__box-subtext">
-                Fresh look at <br />familiar elements<br /> is sure to create <br />a great experience<br /> that members of<br /> your community<br /> will love.
+                Secure escrow,<br />transparent<br />milestones, and<br />trustless payments<br />powered by<br />Stacks blockchain<br />technology.
               </p>
               <div className="elevate-view__box-subtext_img">
                 <img src="/images/index/communication.png" alt="communication" />
