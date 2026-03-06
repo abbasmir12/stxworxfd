@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stacks/connect": "^8.2.5",
+    "@stacks/connect-react": "^23.1.5",
+    "@stacks/transactions": "^7.3.1",
+    "framer-motion": "^12.35.0",
     "gsap": "^3.14.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useWallet } from '../context/WalletContext';
 
 const MOCK_PROJECTS = [
   {
@@ -57,12 +58,88 @@ const LATEST_NEWS = [
 ];
 
 function Home() {
+  const navigate = useNavigate();
+  const { connectWallet, userRole, isConnected, getAddress, truncateAddress } = useWallet();
+
+  // Role-based stats
+  const stats = userRole === 'client' 
+    ? [
+        { label: 'jobs posted', value: '12', link: '/jobs', icon: 'briefcase' },
+        { label: 'active contracts', value: '5', link: '/projects', icon: 'users' },
+        { label: 'in escrow', value: '$8.5K', link: '/projects', icon: 'lock' },
+        { label: 'avg rating', value: '4.8', link: '/home', icon: 'star' }
+      ]
+    : [
+        { label: 'jobs available', value: '500+', link: '/jobs', icon: 'search' },
+        { label: 'active bids', value: '8', link: '/projects', icon: 'send' },
+        { label: 'total earned', value: '$12.3K', link: '/home', icon: 'dollar' },
+        { label: 'your rating', value: '4.9', link: '/home', icon: 'star' }
+      ];
+
   return (
     <>
+      <style>{`
+        .floating-action-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          width: 60px;
+          height: 60px;
+          background: linear-gradient(135deg, #6d9985, #5a8070);
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 4px 20px rgba(109, 153, 133, 0.4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          z-index: 1000;
+        }
+
+        .floating-action-btn:hover {
+          transform: scale(1.1) rotate(90deg);
+          box-shadow: 0 6px 30px rgba(109, 153, 133, 0.6);
+        }
+
+        .floating-action-btn svg {
+          width: 24px;
+          height: 24px;
+        }
+
+        @media (max-width: 768px) {
+          .floating-action-btn {
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+          }
+        }
+      `}</style>
+
+      {userRole === 'client' && (
+        <button 
+          className="floating-action-btn" 
+          onClick={() => navigate('/post-job')}
+          title="Post a New Job"
+        >
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+      )}
       <section className="main__heading heading">
         <div className="container">
           <h1 className="heading__title">
-            <span>Join</span> the Decentralized Freelance Platform <span>with</span> Milestone-Based Escrow
+            {userRole === 'client' ? (
+              <>
+                <span>Manage</span> Your Projects <span>&</span> Hire Top Talent
+              </>
+            ) : (
+              <>
+                <span>Find</span> Amazing Projects <span>&</span> Grow Your Career
+              </>
+            )}
           </h1>
         </div>
       </section>
@@ -70,50 +147,19 @@ function Home() {
       <section className="main__count count">
         <div className="container">
           <div className="count__inner">
-            <Link className="count__item count-item" to="/jobs">
-              <div className="count-item__icon">
-                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.5 6H9M6.5 3L9.14645 5.64645C9.34171 5.84171 9.34171 6.15829 9.14645 6.35355L6.5 9" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <p className="count-item__text">
-                <span>500+</span>
-              </p>
-              <p className="count-item__subtext">active jobs</p>
-            </Link>
-            <Link className="count__item count-item" to="/freelancers">
-              <div className="count-item__icon">
-                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.5 6H9M6.5 3L9.14645 5.64645C9.34171 5.84171 9.34171 6.15829 9.14645 6.35355L6.5 9" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <p className="count-item__text">
-                <span>1,000+</span>
-              </p>
-              <p className="count-item__subtext">freelancers</p>
-            </Link>
-            <Link className="count__item count-item" to="/projects">
-              <div className="count-item__icon">
-                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.5 6H9M6.5 3L9.14645 5.64645C9.34171 5.84171 9.34171 6.15829 9.14645 6.35355L6.5 9" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <p className="count-item__text">
-                <span>$50K+</span>
-              </p>
-              <p className="count-item__subtext">in escrow</p>
-            </Link>
-            <Link className="count__item count-item" to="/leaderboard">
-              <div className="count-item__icon">
-                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.5 6H9M6.5 3L9.14645 5.64645C9.34171 5.84171 9.34171 6.15829 9.14645 6.35355L6.5 9" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <p className="count-item__text">
-                <span>4.9</span>
-              </p>
-              <p className="count-item__subtext">avg rating</p>
-            </Link>
+            {stats.map((stat, index) => (
+              <Link key={index} className="count__item count-item" to={stat.link}>
+                <div className="count-item__icon">
+                  <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5 6H9M6.5 3L9.14645 5.64645C9.34171 5.84171 9.34171 6.15829 9.14645 6.35355L6.5 9" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <p className="count-item__text">
+                  <span>{stat.value}</span>
+                </p>
+                <p className="count-item__subtext">{stat.label}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -133,9 +179,36 @@ function Home() {
                 </span>
                 on Stacks Blockchain
               </h2>
-              <Link className="elevate-content__link" to="/home">
-                Connect Wallet
-              </Link>
+              {isConnected ? (
+                <div 
+                  className="elevate-content__link" 
+                  style={{ 
+                    border: 'none', 
+                    background: 'rgba(109, 153, 133, 0.2)',
+                    cursor: 'default',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 6L9 17L4 12" stroke="#6d9985" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>Wallet Connected</span>
+                  <span style={{ color: '#6d9985', fontSize: '14px' }}>
+                    ({truncateAddress(getAddress())})
+                  </span>
+                </div>
+              ) : (
+                <button 
+                  className="elevate-content__link" 
+                  onClick={connectWallet}
+                  style={{ border: 'none', cursor: 'pointer', background: 'transparent' }}
+                >
+                  Connect Wallet
+                </button>
+              )}
             </div>
             <div className="elevate__view elevate-view">
               <div className="elevate-view__box">
@@ -188,7 +261,9 @@ function Home() {
       <section className="main__new-courses new-courses">
         <div className="container">
           <div className="new-courses__top new-courses-top">
-            <h2 className="new-courses-top__title">New Projects</h2>
+            <h2 className="new-courses-top__title">
+              {userRole === 'client' ? 'Active Contracts' : 'New Projects'}
+            </h2>
           </div>
           <div className="courses__inner">
             {MOCK_PROJECTS.map(project => (

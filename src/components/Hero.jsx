@@ -1,4 +1,8 @@
+import { useWallet } from '../context/WalletContext';
+
 export default function Hero() {
+  const { connectWallet } = useWallet();
+
   return (
     <section className="main__elevate elevate">
       <div className="container">
@@ -8,7 +12,7 @@ export default function Hero() {
             <h2 className="elevate-content__title">
               Decentralized Freelance Platform with <span>Milestone-Based Escrow</span> on Stacks Blockchain
             </h2>
-            <button className="elevate-content__link" onClick={() => alert('Wallet integration coming soon!')} style={{border: 'none', cursor: 'pointer'}}>Connect Wallet</button>
+            <button className="elevate-content__link" onClick={connectWallet} style={{border: 'none', cursor: 'pointer'}}>Connect Wallet</button>
           </div>
           <div className="elevate__view elevate-view">
             <div className="elevate-view__box">

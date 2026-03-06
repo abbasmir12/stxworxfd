@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useWallet } from '../context/WalletContext';
+import ApplyModal from '../components/ApplyModal';
 
 const MOCK_JOBS = [
   {
@@ -77,9 +79,24 @@ const MOCK_JOBS = [
 ];
 
 function BrowseJobs() {
+  const { userRole } = useWallet();
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('All Categories');
   const [sortBy, setSortBy] = useState('date');
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [showApplyModal, setShowApplyModal] = useState(false);
+
+  const handleApply = (job) => {
+    setSelectedJob(job);
+    setShowApplyModal(true);
+  };
+
+  const handleSubmitProposal = (proposal) => {
+    // TODO: Save to backend
+    alert(`Proposal submitted for "${selectedJob.title}"!\n\nBid: ${proposal.bidAmount} STX\nTimeline: ${proposal.timeline}`);
+    setShowApplyModal(false);
+    setSelectedJob(null);
+  };
 
   const filteredJobs = MOCK_JOBS.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -89,10 +106,23 @@ function BrowseJobs() {
   });
 
   return (
-    <section className="main__blog blog">
+    <>
+      {showApplyModal && selectedJob && (
+        <ApplyModal 
+          job={selectedJob} 
+          onClose={() => setShowApplyModal(false)}
+          onSubmit={handleSubmitProposal}
+        />
+      )}
+      
+      <section className="main__blog blog">
       <div className="container">
         <h1 className="blog__title title">
-          Browse <span style={{ color: '#d4a843' }}>Jobs</span>
+          {userRole === 'client' ? (
+            <>My Posted <span style={{ color: '#d4a843' }}>Jobs</span></>
+          ) : (
+            <>Browse <span style={{ color: '#d4a843' }}>Jobs</span></>
+          )}
         </h1>
         <div className="blog__filters-panel filters-panel">
           <p className="filters-panel__text">
@@ -172,12 +202,56 @@ function BrowseJobs() {
                     ${job.budget.toLocaleString()} STX
                   </ins>
                 </div>
+                {userRole === 'freelancer' && (
+                  <button 
+                    onClick={() => handleApply(job)}
+                    style={{
+                      width: '100%',
+                      marginTop: '15px',
+                      padding: '12px',
+                      background: 'linear-gradient(135deg, #c77bc9, #b56ab8)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: '#fff',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.boxShadow = '0 6px 20px rgba(199, 123, 201, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    Apply Now
+                  </button>
+                )}
+                {userRole === 'client' && (
+                  <div style={{
+                    marginTop: '15px',
+                    padding: '12px',
+                    background: 'rgba(109, 153, 133, 0.1)',
+                    border: '1px solid rgba(109, 153, 133, 0.3)',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    color: '#6d9985',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}>
+                    {job.proposals} Proposals Received
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
       </div>
     </section>
+    </>
   );
 }
 

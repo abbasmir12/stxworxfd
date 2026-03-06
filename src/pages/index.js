@@ -7,3 +7,4 @@ export { default as Freelancers } from './Freelancers';
 export { default as Leaderboard } from './Leaderboard';
 export { default as Disputes } from './Disputes';
 export { default as HowItWorks } from './HowItWorks';
+export { default as PostJob } from './PostJob';
